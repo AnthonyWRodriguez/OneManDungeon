@@ -1,23 +1,56 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://Scripts/Battle.gd" type="Script" id=1]
-[ext_resource path="res://Scenes/Rat.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes/Slime.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scripts/PlayerStats.gd" type="Script" id=4]
-[ext_resource path="res://Images/Dungeon.png" type="Texture" id=5]
-[ext_resource path="res://Images/Mobile RPG Mockup.png" type="Texture" id=6]
-[ext_resource path="res://DefaultTheme.tres" type="Theme" id=7]
-[ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=8]
-[ext_resource path="res://Scenes/SwordActionButton.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Scenes/HealActionButton.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/Enemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/PlayerStats.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/SwordStats.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/UI.gd" type="Script" id=4]
+[ext_resource path="res://Images/Sample/Tutorial/Mobile RPG Mockup.png" type="Texture" id=5]
+[ext_resource path="res://Images/Sample/Tutorial/Dungeon.png" type="Texture" id=6]
+[ext_resource path="res://Scripts/StatsPanel.gd" type="Script" id=7]
+[ext_resource path="res://Scripts/Battle.gd" type="Script" id=8]
+[ext_resource path="res://Scenes/MagicButtons.gd" type="Script" id=9]
+[ext_resource path="res://Scenes/Rat.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/NextMoveButtons.gd" type="Script" id=11]
 
-[sub_resource type="StyleBoxEmpty" id=1]
+[sub_resource type="Animation" id=1]
+resource_name = "HideAllStats"
+length = 0.21
+step = 0.07
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.07, 0.14, 0.21 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 84, 71 ), Vector2( 84, 53 ), Vector2( 84, 37 ), Vector2( 84, 21 ) ]
+}
 
 [sub_resource type="Animation" id=2]
+length = 0.21
+step = 0.07
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.07, 0.14, 0.21 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 84, 21 ), Vector2( 84, 37 ), Vector2( 84, 53 ), Vector2( 84, 71 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "FadeBlack"
 length = 0.5
 step = 0.05
 tracks/0/type = "value"
-tracks/0/path = NodePath("Fade:modulate")
+tracks/0/path = NodePath("BlackFade:modulate")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -30,112 +63,427 @@ tracks/0/keys = {
 }
 
 [node name="Battle" type="Node"]
-script = ExtResource( 1 )
-enemies = [ ExtResource( 2 ), ExtResource( 3 ) ]
+script = ExtResource( 8 )
+enemies = [ ExtResource( 10 ) ]
 
-[node name="PlayerStats" type="Node" parent="."]
-script = ExtResource( 4 )
+[node name="SwordStats" type="Node" parent="."]
+script = ExtResource( 3 )
 
 [node name="Dungeon" type="Sprite" parent="."]
-position = Vector2( 45, 80 )
-texture = ExtResource( 5 )
-
-[node name="EnemyPosition" type="Position2D" parent="."]
-position = Vector2( 46, 29 )
-
-[node name="Slime" parent="EnemyPosition" instance=ExtResource( 3 )]
-
-[node name="Mobile RPG Mockup" type="Sprite" parent="."]
-visible = false
-modulate = Color( 1, 1, 1, 0.294118 )
 position = Vector2( 45, 80 )
 texture = ExtResource( 6 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="UI" type="Control" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme = ExtResource( 7 )
+[node name="Mobile RPG Mockup" type="Sprite" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0.290196 )
+position = Vector2( 45, 80 )
+texture = ExtResource( 5 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="UI"]
-margin_right = 90.0
-margin_bottom = 47.0
-mouse_filter = 2
+[node name="PlayerStats" type="Node" parent="."]
+script = ExtResource( 2 )
 
-[node name="NextRoomButton" type="Button" parent="UI/CenterContainer"]
-visible = false
-margin_left = 10.0
-margin_top = 17.0
-margin_right = 80.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 70, 13 )
-text = "ENTER NEXT ROOM"
+[node name="EnemyPosition" type="Position2D" parent="."]
+position = Vector2( 46, 33 )
+
+[node name="Enemy" parent="EnemyPosition" instance=ExtResource( 1 )]
+
+[node name="UI" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="StatsPanel" type="Panel" parent="UI"]
 margin_left = 3.0
-margin_top = 47.0
+margin_top = 49.0
 margin_right = 87.0
 margin_bottom = 70.0
-script = ExtResource( 8 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="StatsContainer" type="HBoxContainer" parent="UI/StatsPanel"]
+[node name="StatsPanelAnimation" type="AnimationPlayer" parent="UI/StatsPanel"]
+anims/HideAllStats = SubResource( 1 )
+anims/ShowAllStats = SubResource( 2 )
+
+[node name="SmallStats" type="HBoxContainer" parent="UI/StatsPanel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
 
-[node name="HP" type="Label" parent="UI/StatsPanel/StatsContainer"]
-margin_top = 2.0
+[node name="HPLabelSmall" type="Label" parent="UI/StatsPanel/SmallStats"]
+margin_top = 1.0
 margin_right = 25.0
-margin_bottom = 21.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "HP
-25"
+20"
 align = 1
 
-[node name="AP" type="Label" parent="UI/StatsPanel/StatsContainer"]
+[node name="AtkLabelSmall" type="Label" parent="UI/StatsPanel/SmallStats"]
 margin_left = 29.0
-margin_top = 2.0
+margin_top = 1.0
 margin_right = 54.0
-margin_bottom = 21.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
-text = "AP
+text = "Atk
 3"
 align = 1
 
-[node name="MP" type="Label" parent="UI/StatsPanel/StatsContainer"]
+[node name="StamLabelSmall" type="Label" parent="UI/StatsPanel/SmallStats"]
 margin_left = 58.0
-margin_top = 2.0
+margin_top = 1.0
 margin_right = 84.0
-margin_bottom = 21.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
-text = "MP
+text = "Stam
 10"
 align = 1
 
-[node name="TextboxPanel" type="Panel" parent="UI"]
-margin_left = -2.0
-margin_top = 137.0
-margin_right = 92.0
-margin_bottom = 162.0
+[node name="CongratsLabel" type="Label" parent="UI/StatsPanel"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Congratulations
+"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
 
-[node name="Textbox" type="RichTextLabel" parent="UI/TextboxPanel"]
-margin_left = 3.0
-margin_top = 2.0
-margin_right = 91.0
-margin_bottom = 23.0
-custom_styles/normal = SubResource( 1 )
-custom_constants/line_separation = 2
-text = "Here is a test
-So we can see how it
-looks"
-scroll_active = false
+[node name="BigStats" type="Control" parent="UI/StatsPanel"]
+visible = false
+margin_right = 82.0
+margin_bottom = 71.0
+rect_pivot_offset = Vector2( 41, 37 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
 
-[node name="BattleActionButtons" type="GridContainer" parent="UI"]
+[node name="EnemyName" type="Label" parent="UI/StatsPanel/BigStats"]
+margin_left = 7.0
+margin_top = -2.0
+margin_right = 77.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 70, 0 )
+text = "Rat"
+align = 1
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="EnemyStats" type="GridContainer" parent="UI/StatsPanel/BigStats"]
+margin_left = 1.0
+margin_top = 5.0
+margin_right = 83.0
+margin_bottom = 37.0
+custom_constants/vseparation = -6
+custom_constants/hseparation = -3
+columns = 3
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="EnemyAtk" type="Label" parent="UI/StatsPanel/BigStats/EnemyStats"]
+margin_right = 29.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "ATK
+3"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnemySpd" type="Label" parent="UI/StatsPanel/BigStats/EnemyStats"]
+margin_left = 26.0
+margin_right = 55.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "SPD
+3"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnemyStam" type="Label" parent="UI/StatsPanel/BigStats/EnemyStats"]
+margin_left = 52.0
+margin_right = 81.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "STAM
+5"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnemyDef" type="Label" parent="UI/StatsPanel/BigStats/EnemyStats"]
+margin_top = 13.0
+margin_right = 29.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "DEF
+1"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnemyRes" type="Label" parent="UI/StatsPanel/BigStats/EnemyStats"]
+margin_left = 26.0
+margin_top = 13.0
+margin_right = 55.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "RES
+1"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnemyTired" type="Label" parent="UI/StatsPanel/BigStats/EnemyStats"]
+margin_left = 52.0
+margin_top = 13.0
+margin_right = 81.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "TIRED
+0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Line2D" type="Line2D" parent="UI/StatsPanel/BigStats"]
+position = Vector2( 55, 19 )
+points = PoolVector2Array( -54, 16.5, 28, 16.5 )
+width = 0.5
+default_color = Color( 0.666667, 0.666667, 0.666667, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="YourName" type="Label" parent="UI/StatsPanel/BigStats"]
+margin_left = 9.0
+margin_top = 60.0
+margin_right = 79.0
+margin_bottom = 72.0
+rect_min_size = Vector2( 70, 0 )
+text = "You"
+align = 1
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="YourStats" type="GridContainer" parent="UI/StatsPanel/BigStats"]
+margin_left = 1.0
+margin_top = 33.0
+margin_right = 83.0
+margin_bottom = 65.0
+custom_constants/vseparation = -6
+custom_constants/hseparation = -3
+columns = 3
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="YourAtk" type="Label" parent="UI/StatsPanel/BigStats/YourStats"]
+margin_right = 29.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "ATK
+3"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YourSpd" type="Label" parent="UI/StatsPanel/BigStats/YourStats"]
+margin_left = 26.0
+margin_right = 55.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "SPD
+5"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YourStam" type="Label" parent="UI/StatsPanel/BigStats/YourStats"]
+margin_left = 52.0
+margin_right = 81.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "STAM
+10"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YourDef" type="Label" parent="UI/StatsPanel/BigStats/YourStats"]
+margin_top = 13.0
+margin_right = 29.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "DEF
+3"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YourRes" type="Label" parent="UI/StatsPanel/BigStats/YourStats"]
+margin_left = 26.0
+margin_top = 13.0
+margin_right = 55.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "RES
+3"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YourTired" type="Label" parent="UI/StatsPanel/BigStats/YourStats"]
+margin_left = 52.0
+margin_top = 13.0
+margin_right = 81.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "TIRED
+0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BaseButtons" type="VBoxContainer" parent="UI"]
+margin_left = 9.0
+margin_top = 73.0
+margin_right = 81.0
+margin_bottom = 133.0
+custom_constants/separation = 3
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="TopButtonsContainer" type="Control" parent="UI/BaseButtons"]
+margin_right = 72.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 72, 45 )
+
+[node name="TopButtons" type="GridContainer" parent="UI/BaseButtons/TopButtonsContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 72, 45 )
+custom_constants/vseparation = 3
+custom_constants/hseparation = 8
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SwordButton" type="Button" parent="UI/BaseButtons/TopButtonsContainer/TopButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "Attack"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Magic" type="Button" parent="UI/BaseButtons/TopButtonsContainer/TopButtons"]
+margin_left = 40.0
+margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "Magic"
+
+[node name="Button2" type="Button" parent="UI/BaseButtons/TopButtonsContainer/TopButtons"]
+margin_top = 16.0
+margin_right = 32.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+
+[node name="Button3" type="Button" parent="UI/BaseButtons/TopButtonsContainer/TopButtons"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 72.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+
+[node name="Defend" type="Button" parent="UI/BaseButtons/TopButtonsContainer/TopButtons"]
+margin_top = 32.0
+margin_right = 32.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+text = "Defend"
+
+[node name="Rest" type="Button" parent="UI/BaseButtons/TopButtonsContainer/TopButtons"]
+margin_left = 40.0
+margin_top = 32.0
+margin_right = 72.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+text = "Rest"
+
+[node name="BottomButtonsContainer" type="Control" parent="UI/BaseButtons"]
+margin_top = 48.0
+margin_right = 72.0
+margin_bottom = 61.0
+rect_min_size = Vector2( 72, 13 )
+
+[node name="BottomButtons" type="GridContainer" parent="UI/BaseButtons/BottomButtonsContainer"]
+margin_right = 72.0
+margin_bottom = 13.0
+custom_constants/vseparation = 3
+custom_constants/hseparation = 8
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button6" type="Button" parent="UI/BaseButtons/BottomButtonsContainer/BottomButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+
+[node name="StatsButton" type="Button" parent="UI/BaseButtons/BottomButtonsContainer/BottomButtons"]
+margin_left = 40.0
+margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "Stats"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SwordButtons" type="GridContainer" parent="UI"]
+visible = false
 margin_left = 9.0
 margin_top = 73.0
 margin_right = 81.0
@@ -143,23 +491,498 @@ margin_bottom = 134.0
 custom_constants/vseparation = 3
 custom_constants/hseparation = 8
 columns = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
 
-[node name="SwordActionButton" parent="UI/BattleActionButtons" instance=ExtResource( 9 )]
+[node name="SimpleSword" type="Button" parent="UI/SwordButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "SWORD"
 
-[node name="HealActionButton" parent="UI/BattleActionButtons" instance=ExtResource( 10 )]
+[node name="Sword2" type="Button" parent="UI/SwordButtons"]
 margin_left = 40.0
 margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
 
-[node name="Fade" type="ColorRect" parent="."]
+[node name="Sword3" type="Button" parent="UI/SwordButtons"]
+margin_top = 16.0
+margin_right = 32.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+
+[node name="Sword4" type="Button" parent="UI/SwordButtons"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 72.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+
+[node name="Sword5" type="Button" parent="UI/SwordButtons"]
+margin_top = 32.0
+margin_right = 32.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+
+[node name="Sword6" type="Button" parent="UI/SwordButtons"]
+margin_left = 40.0
+margin_top = 32.0
+margin_right = 72.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+
+[node name="Attack" type="Button" parent="UI/SwordButtons"]
+margin_top = 48.0
+margin_right = 32.0
+margin_bottom = 61.0
+rect_min_size = Vector2( 32, 13 )
+disabled = true
+text = "ATTACK"
+
+[node name="Cancel" type="Button" parent="UI/SwordButtons"]
+margin_left = 40.0
+margin_top = 48.0
+margin_right = 72.0
+margin_bottom = 61.0
+rect_min_size = Vector2( 32, 13 )
+text = "CANCEL"
+
+[node name="MagicButtons" type="GridContainer" parent="UI"]
+visible = false
+margin_left = 9.0
+margin_top = 73.0
+margin_right = 81.0
+margin_bottom = 134.0
+custom_constants/vseparation = 3
+custom_constants/hseparation = 8
+columns = 2
+script = ExtResource( 9 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="HealHp" type="Button" parent="UI/MagicButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "HEAL"
+
+[node name="BuffAtk" type="Button" parent="UI/MagicButtons"]
+margin_left = 40.0
+margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "ATK+"
+
+[node name="BuffSpd" type="Button" parent="UI/MagicButtons"]
+margin_top = 16.0
+margin_right = 32.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "SPD+"
+
+[node name="BuffDef" type="Button" parent="UI/MagicButtons"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 72.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "DEF+"
+
+[node name="BuffRes" type="Button" parent="UI/MagicButtons"]
+margin_top = 32.0
+margin_right = 32.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "RES+"
+
+[node name="HealStam" type="Button" parent="UI/MagicButtons"]
+margin_left = 40.0
+margin_top = 32.0
+margin_right = 72.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "RECOVER"
+
+[node name="Apply" type="Button" parent="UI/MagicButtons"]
+margin_top = 48.0
+margin_right = 32.0
+margin_bottom = 61.0
+rect_min_size = Vector2( 32, 13 )
+disabled = true
+text = "Apply"
+
+[node name="Cancel" type="Button" parent="UI/MagicButtons"]
+margin_left = 40.0
+margin_top = 48.0
+margin_right = 72.0
+margin_bottom = 61.0
+rect_min_size = Vector2( 32, 13 )
+text = "Cancel"
+
+[node name="DefendButtons" type="GridContainer" parent="UI"]
+visible = false
+margin_left = 9.0
+margin_top = 121.0
+margin_right = 81.0
+margin_bottom = 134.0
+custom_constants/vseparation = 3
+custom_constants/hseparation = 8
+columns = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Defend" type="Button" parent="UI/DefendButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "DEFEND"
+
+[node name="CancelDefend" type="Button" parent="UI/DefendButtons"]
+margin_left = 40.0
+margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "CANCEL"
+
+[node name="RestButtons" type="GridContainer" parent="UI"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 9.0
+margin_top = 121.0
+margin_right = -9.0
+margin_bottom = -26.0
+custom_constants/vseparation = 3
+custom_constants/hseparation = 8
+columns = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Rest" type="Button" parent="UI/RestButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "REST"
+
+[node name="CancelRest" type="Button" parent="UI/RestButtons"]
+margin_left = 40.0
+margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "CANCEL"
+
+[node name="LevelUpButtons" type="VBoxContainer" parent="UI"]
+visible = false
+margin_left = 9.0
+margin_top = 73.0
+margin_right = 81.0
+margin_bottom = 134.0
+custom_constants/separation = 3
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="TopLevelUpButtonsContainer" type="Control" parent="UI/LevelUpButtons"]
+margin_right = 72.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 72, 45 )
+
+[node name="TopLevelUpButtons" type="GridContainer" parent="UI/LevelUpButtons/TopLevelUpButtonsContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 72, 45 )
+custom_constants/vseparation = 3
+custom_constants/hseparation = 8
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HpUpButton" type="Button" parent="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "HP"
+
+[node name="AtkUpButton" type="Button" parent="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons"]
+margin_left = 40.0
+margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "ATK"
+
+[node name="SpdUpButton" type="Button" parent="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons"]
+margin_top = 16.0
+margin_right = 32.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "SPD"
+
+[node name="DefUpButton" type="Button" parent="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 72.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "DEF"
+
+[node name="ResUpButton" type="Button" parent="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons"]
+margin_top = 32.0
+margin_right = 32.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "RES"
+
+[node name="StamUpButton" type="Button" parent="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons"]
+margin_left = 40.0
+margin_top = 32.0
+margin_right = 72.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+toggle_mode = true
+text = "STAM"
+
+[node name="BottomLevelUpButtonsContainer" type="Control" parent="UI/LevelUpButtons"]
+margin_top = 48.0
+margin_right = 72.0
+margin_bottom = 48.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BottomLevelUpButtons" type="GridContainer" parent="UI/LevelUpButtons/BottomLevelUpButtonsContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/vseparation = 3
+custom_constants/hseparation = 8
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AddOneButton" type="Button" parent="UI/LevelUpButtons/BottomLevelUpButtonsContainer/BottomLevelUpButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+disabled = true
+text = "Add"
+
+[node name="ChooseButton" type="Button" parent="UI/LevelUpButtons/BottomLevelUpButtonsContainer/BottomLevelUpButtons"]
+margin_left = 40.0
+margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "Choose"
+
+[node name="NextMoveButtons" type="GridContainer" parent="UI"]
+visible = false
+margin_left = 9.0
+margin_top = 73.0
+margin_right = 81.0
+margin_bottom = 134.0
+custom_constants/vseparation = 3
+custom_constants/hseparation = 8
+columns = 2
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="NextMoveEnemy" type="Button" parent="UI/NextMoveButtons"]
+margin_right = 32.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "Enemy"
+
+[node name="NextMoveTreasure" type="Button" parent="UI/NextMoveButtons"]
+margin_left = 40.0
+margin_right = 72.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 32, 13 )
+text = "Chest"
+
+[node name="NextMoveSecretSpring" type="Button" parent="UI/NextMoveButtons"]
+margin_top = 16.0
+margin_right = 32.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+text = "Spring"
+
+[node name="NextMoveExchange" type="Button" parent="UI/NextMoveButtons"]
+margin_left = 40.0
+margin_top = 16.0
+margin_right = 72.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 32, 13 )
+text = "Change"
+
+[node name="NextMoveFocus" type="Button" parent="UI/NextMoveButtons"]
+margin_top = 32.0
+margin_right = 32.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+text = "Focus"
+
+[node name="NextMoveButton" type="Button" parent="UI/NextMoveButtons"]
+margin_left = 40.0
+margin_top = 32.0
+margin_right = 72.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 32, 13 )
+
+[node name="NextMoveForward" type="Button" parent="UI/NextMoveButtons"]
+margin_top = 48.0
+margin_right = 32.0
+margin_bottom = 61.0
+rect_min_size = Vector2( 32, 13 )
+text = "Onward"
+
+[node name="NextMoveCancel" type="Button" parent="UI/NextMoveButtons"]
+margin_left = 40.0
+margin_top = 48.0
+margin_right = 72.0
+margin_bottom = 61.0
+rect_min_size = Vector2( 32, 13 )
+text = "Cancel"
+
+[node name="LowerPanel" type="Panel" parent="UI"]
+margin_left = -2.0
+margin_top = 137.0
+margin_right = 92.0
+margin_bottom = 162.0
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerStats" type="HBoxContainer" parent="UI/LowerPanel"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HPLabel" type="Label" parent="UI/LowerPanel/PlayerStats"]
+margin_top = 3.0
+margin_right = 28.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+text = "HP
+20"
+align = 1
+
+[node name="LvlLabel" type="Label" parent="UI/LowerPanel/PlayerStats"]
+margin_left = 32.0
+margin_top = 3.0
+margin_right = 61.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+text = "Lvl
+1"
+align = 1
+
+[node name="ExpLabel" type="Label" parent="UI/LowerPanel/PlayerStats"]
+margin_left = 65.0
+margin_top = 3.0
+margin_right = 94.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+text = "Exp
+0"
+align = 1
+
+[node name="WholePanel" type="Label" parent="UI/LowerPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -1.0
+margin_bottom = -1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Fade" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BlackFade" type="ColorRect" parent="Fade"]
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color( 0, 0, 0, 1 )
 __meta__ = {
-"_edit_lock_": true
+"_edit_use_anchors_": false
 }
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/FadeToNewRoom = SubResource( 2 )
-[connection signal="pressed" from="UI/CenterContainer/NextRoomButton" to="." method="_on_NextRoomButton_pressed"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Fade"]
+anims/FadeBlack = SubResource( 3 )
+[connection signal="checkifEnemyAttacks" from="." to="." method="_on_Battle_checkifEnemyAttacks"]
+[connection signal="updateStats" from="." to="." method="_on_Battle_updateStats"]
+[connection signal="atk_changed" from="PlayerStats" to="UI/StatsPanel" method="_on_PlayerStats_atk_changed"]
+[connection signal="def_changed" from="PlayerStats" to="UI/StatsPanel" method="_on_PlayerStats_def_changed"]
+[connection signal="hp_changed" from="PlayerStats" to="UI/StatsPanel" method="_on_PlayerStats_hp_changed"]
+[connection signal="lvl_changed" from="PlayerStats" to="UI" method="_on_PlayerStats_lvl_changed"]
+[connection signal="res_changed" from="PlayerStats" to="UI/StatsPanel" method="_on_PlayerStats_res_changed"]
+[connection signal="spd_changed" from="PlayerStats" to="UI/StatsPanel" method="_on_PlayerStats_spd_changed"]
+[connection signal="stam_changed" from="PlayerStats" to="UI/StatsPanel" method="_on_PlayerStats_stam_changed"]
+[connection signal="tired_changed" from="PlayerStats" to="UI/StatsPanel" method="_on_PlayerStats_tired_changed"]
+[connection signal="xp_changed" from="PlayerStats" to="UI/StatsPanel" method="_on_PlayerStats_xp_changed"]
+[connection signal="activate_buttons" from="EnemyPosition/Enemy" to="UI" method="_on_Enemy_activate_buttons"]
+[connection signal="died" from="EnemyPosition/Enemy" to="." method="_on_Enemy_died"]
+[connection signal="pressed" from="UI/BaseButtons/TopButtonsContainer/TopButtons/SwordButton" to="UI" method="_on_SwordButton_pressed"]
+[connection signal="pressed" from="UI/BaseButtons/TopButtonsContainer/TopButtons/Magic" to="UI" method="_on_Magic_pressed"]
+[connection signal="pressed" from="UI/BaseButtons/TopButtonsContainer/TopButtons/Defend" to="UI" method="_on_Defend_pressed"]
+[connection signal="pressed" from="UI/BaseButtons/TopButtonsContainer/TopButtons/Rest" to="UI" method="_on_Rest_pressed"]
+[connection signal="pressed" from="UI/BaseButtons/BottomButtonsContainer/BottomButtons/StatsButton" to="UI" method="_on_StatsButton_pressed"]
+[connection signal="pressed" from="UI/SwordButtons/SimpleSword" to="." method="_on_SimpleSword_pressed"]
+[connection signal="pressed" from="UI/SwordButtons/Attack" to="." method="_on_Attack_pressed"]
+[connection signal="pressed" from="UI/SwordButtons/Cancel" to="UI" method="_on_Cancel_pressed"]
+[connection signal="pressed" from="UI/MagicButtons/HealHp" to="UI/MagicButtons" method="_on_HealHp_pressed"]
+[connection signal="pressed" from="UI/MagicButtons/BuffAtk" to="UI/MagicButtons" method="_on_BuffAtk_pressed"]
+[connection signal="pressed" from="UI/MagicButtons/BuffSpd" to="UI/MagicButtons" method="_on_BuffSpd_pressed"]
+[connection signal="pressed" from="UI/MagicButtons/BuffDef" to="UI/MagicButtons" method="_on_BuffDef_pressed"]
+[connection signal="pressed" from="UI/MagicButtons/BuffRes" to="UI/MagicButtons" method="_on_BuffRes_pressed"]
+[connection signal="pressed" from="UI/MagicButtons/HealStam" to="UI/MagicButtons" method="_on_HealStam_pressed"]
+[connection signal="pressed" from="UI/MagicButtons/Apply" to="." method="_on_Apply_pressed"]
+[connection signal="pressed" from="UI/MagicButtons/Cancel" to="UI" method="_on_Cancel_pressed"]
+[connection signal="pressed" from="UI/DefendButtons/Defend" to="." method="_on_Defend_pressed"]
+[connection signal="pressed" from="UI/DefendButtons/CancelDefend" to="UI" method="_on_CancelDefend_pressed"]
+[connection signal="pressed" from="UI/RestButtons/Rest" to="." method="_on_Rest_pressed"]
+[connection signal="pressed" from="UI/RestButtons/CancelRest" to="UI" method="_on_CancelRest_pressed"]
+[connection signal="pressed" from="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons/HpUpButton" to="UI" method="_on_HpUpButton_pressed"]
+[connection signal="pressed" from="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons/AtkUpButton" to="UI" method="_on_AtkUpButton_pressed"]
+[connection signal="pressed" from="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons/SpdUpButton" to="UI" method="_on_SpdUpButton_pressed"]
+[connection signal="pressed" from="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons/DefUpButton" to="UI" method="_on_DefUpButton_pressed"]
+[connection signal="pressed" from="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons/ResUpButton" to="UI" method="_on_ResUpButton_pressed"]
+[connection signal="pressed" from="UI/LevelUpButtons/TopLevelUpButtonsContainer/TopLevelUpButtons/StamUpButton" to="UI" method="_on_StamUpButton_pressed"]
+[connection signal="pressed" from="UI/LevelUpButtons/BottomLevelUpButtonsContainer/BottomLevelUpButtons/AddOneButton" to="UI" method="_on_AddOneButton_pressed"]
+[connection signal="pressed" from="UI/LevelUpButtons/BottomLevelUpButtonsContainer/BottomLevelUpButtons/ChooseButton" to="UI" method="_on_ChooseCancelButton_pressed"]
+[connection signal="pressed" from="UI/NextMoveButtons/NextMoveEnemy" to="UI/NextMoveButtons" method="_on_NextMoveEnemy_pressed"]
